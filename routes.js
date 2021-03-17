@@ -12,7 +12,7 @@ module.exports = function(app){
 	app.route('/register').get((req, res)=>{
 		res.render('registration')
 	})
-	
+	 
 	app.route('/register').post((req, res)=>{
 		const newUser = new User(req.body);  
 		const saltRounds = 10; 
