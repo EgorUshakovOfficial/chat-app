@@ -1,0 +1,19 @@
+html
+  head
+   script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+   title Home
+   meta(name='description', content='Home page')
+   meta(charset='utf-8')
+   meta(http-equiv='X-UA-Compatible', content='IE=edge')
+   meta(name='viewport', content='width=device-width, initial-scale=1')
+   link(rel='stylesheet', href='/public/style.css')
+   link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
+  body
+   div(id="chat-container")
+    h1 FTTA Chat
+    ul(id="messages-view")
+    form(action="/home", method="post", id="chat-form")
+     input(type="text", name="message", id="message-input", required)
+     input(type="submit", value="Send Message" class="btn btn-primary", id="message-submit")  
+   <script src="/socket.io/socket.io.js"></script>
+   script(async, defer, src='/public/client.js')
