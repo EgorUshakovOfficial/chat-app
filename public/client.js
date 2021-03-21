@@ -1,7 +1,7 @@
 const socket = io();
 // let messages = []; 
 socket.on('message', data=>{
-	const {message, user} = data; 
+	const {message, user} = data;
 	if (!user){
 		output(message); 
 	}
@@ -10,6 +10,9 @@ socket.on('message', data=>{
 	}
 })
 
+socket.on('remove-user', idTag=>{
+	document.getElementById(idTag).remove(); 
+})
 
 
 $("#chat-form").submit(()=>{
@@ -20,8 +23,9 @@ $("#chat-form").submit(()=>{
 
 let output = (...args)=>{
 	if (args.length===1){
-		var messageToSend = args[0]; 
-		$("#messages-view").append($('<li>').html(`<b>${messageToSend}</b>`));
+		var userOnline = args[0];
+		var idTag = userOnline.split(" ").join("-").toLowerCase(); 
+		$("#users-view").append($(`<li id=${idTag}>`).html(`<b>${userOnline}</b>`));
 	}
 	else{
 		var messageToSend = args[0];

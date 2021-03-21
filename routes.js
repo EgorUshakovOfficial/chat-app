@@ -19,7 +19,7 @@ module.exports = function(app){
 	app.route('/register').post(isPasswordCorrect, isEmailTaken, isUsernameTaken, 
 		(req, res)=>{
 		const {email, fullname, username, password} = req.body; 
-		const newUser = new User({email, fullname, username, password});  
+		const newUser = new User({email, fullname, username, password, connected:false});  
 		const saltRounds = 10; 
 		// Hash password and save new use in the database 
 		bcrypt.genSalt(saltRounds, (err, salt)=>{

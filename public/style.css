@@ -28,7 +28,6 @@ div{
 
 li{
 	list-style-type: none;
-	margin-left: 2vw;
 }
 
 
@@ -78,7 +77,16 @@ li{
 }
 
 #chat-form{
+	width: 100%;
+	align-self: flex-end;
 }
+
+#chat-box{
+	display:flex;
+	height: 90%;
+}
+
+
 
 #email-form{
 	font-size: 1.2em;
@@ -101,9 +109,15 @@ li{
 }
 
 #messages-view{
-	width:80%;
-	height: 90%;
-	overflow: scroll;
+	border: 1.5px solid grey;
+	height: 100%;
+	width: 80%;
 }
 
-
+#users-view{
+	display: flex;
+	flex-direction: column;
+	border: 1.5px solid grey;
+	height: 100%;
+	width: 20%;
+}

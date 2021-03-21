@@ -57,11 +57,12 @@ io.use(passportSocketIo.authorize({
 //Run when client connects
 io.on('connection', socket=>{
   const {fullname} = socket.request.user
-  socket.broadcast.emit('message', {message:`${fullname} has joined the chat`})
+  socket.broadcast.emit('message', {message:fullname})
 
   //Sends every user conneected a message about the user leaving the chat 
   socket.on("disconnect", ()=>{
-    io.emit("message", {message:`${fullname} has left the chat`})
+    const idTag = fullname.split(" ").join("-").toLowerCase();
+    io.emit("remove-user", idTag)
   })
   socket.on("message", message=>{
     io.emit("message", {message, user:socket.request.user});

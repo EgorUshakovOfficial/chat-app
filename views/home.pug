@@ -11,7 +11,10 @@ html
   body
    div(id="chat-container")
     h1 FTTA Chat
-    ul(id="messages-view")
+    div(id="chat-box")
+     ul(id="users-view")
+      li Users Online:
+     ul(id="messages-view")
     form(action="/home", method="post", id="chat-form")
      input(type="text", name="message", id="message-input", required)
      input(type="submit", value="Send Message" class="btn btn-primary", id="message-submit")  
