@@ -3,7 +3,6 @@ const socket = io();
 socket.on('message', data=>{
 	const {message, user} = data; 
 	if (!user){
-		console.log("executed....")
 		output(message); 
 	}
 	else{
@@ -26,7 +25,7 @@ let output = (...args)=>{
 	}
 	else{
 		var messageToSend = args[0];
-		const {firstName, lastName} = args[1]; 
-		$("#messages-view").append($('<li>').html(`<b>${firstName} ${lastName}: ${messageToSend}</b>`));
+		const {fullname} = args[1]; 
+		$("#messages-view").append($('<li>').html(`<b>${fullname}: ${messageToSend}</b>`));
 	}
 }

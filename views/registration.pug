@@ -10,18 +10,23 @@ html
   body
    div(class="container")
     h1(id="title") Registration 
-    form(action="/register", method="post", id="form")
+    if error_msg != ''
+     div(class="alert alert-warning", role="alert") #{error_msg}
+    form(action="/register", method="post", id="registration-form")
      div
-      label First Name:
-      input(type='text', name='firstName' id="first-input", required)
+      label Email:
+      input(type='text', name='email' id="email-input", required)
      div
-      label Last Name:
-      input(type='text', name='lastName', id='last-input' required)
+      label Full Name:
+      input(type='text', name='fullname', id='full-input' required)
      div
       label Username:
       input(type="text", name="username", id="username-input" required)
      div
       label Password:
-      input(type="password", name="password", id="password-input", required)
+      input(type="password", name="password", id="password-input" required)
+     div
+      label Confirm Password:
+      input(type="password", name="confirmPassword", id="confirm-input", required)
      div
       input(type="submit", value="Submit", id="submit", class="btn btn-primary btn-large")

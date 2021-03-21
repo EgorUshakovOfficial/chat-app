@@ -10,8 +10,8 @@ const passport = require("passport");
 const passportSocketIo = require("passport.socketio"); 
 const cookieParser = require("cookie-parser");
 const MongoStore = require('connect-mongo');
-const io = require("socket.io")(http); 
-const helmet = require("helmet")
+const io = require("socket.io")(http);
+const sessionStore = MongoStore.create({ mongoUrl: process.env.MONGO_URI}) 
 
 app.set("view engine", "pug");
 app.use('/public', express.static(__dirname + "/public")); 
@@ -29,47 +29,48 @@ let onAuthorizeFail = (data, message, error, accept)=>{
   accept(null, false);
 }
 
-
-require('./auth')(passport);
+//Passport authentication middleware
+require('./authentication/passportauth')(passport);
 
 //Session 
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  cookie: { secure: false },
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge:60*60*1000},
   key: 'express.sid',
-  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI})
-}))
-
-io.use(passportSocketIo.authorize({
-	cookieParser: cookieParser,
-    key: 'express.sid',
-    secret: process.env.SESSION_SECRET,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI}),
-    success: onAuthorizeSuccess,
-    fail: onAuthorizeFail
+  store: sessionStore
 }))
 app.use(passport.initialize());
 app.use(passport.session());
 
-// //Connect flash 
-app.use(flash()); 
+//Passport.socketIo middleware 
+io.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: 'express.sid',
+    secret: process.env.SESSION_SECRET,
+    store: sessionStore,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail
+}))
 
-//Runs when client connects
+//Run when client connects
 io.on('connection', socket=>{
-	//WHen user joins the chat 
-	const {firstName, lastName} = socket.request.user
-	socket.broadcast.emit('message', {message:`${firstName} ${lastName} has joined the chat`})
-	//User leaves the chat
-	socket.on("disconnect", ()=>{
-		io.emit("message", {message:`${firstName} ${lastName} has left the chat`})
-	})
-	socket.on("message", message=>{
-		io.emit("message", {message, user:socket.request.user});
-	})
+  const {fullname} = socket.request.user
+  socket.broadcast.emit('message', {message:`${fullname} has joined the chat`})
+
+  //Sends every user conneected a message about the user leaving the chat 
+  socket.on("disconnect", ()=>{
+    io.emit("message", {message:`${fullname} has left the chat`})
+  })
+  socket.on("message", message=>{
+    io.emit("message", {message, user:socket.request.user});
+  })
 
 })
+
+//Connect flash 
+app.use(flash()); 
 
 //Global variables 
 app.use((req, res, next) => {
@@ -78,9 +79,6 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error')
     next()
 })
-
-//Security 
-app.use(helmet());
 
 //Routes 
 routes(app);
