@@ -3,6 +3,7 @@ const express = require("express");
 const app = express(); 
 const http = require("http").createServer(app); 
 const mongoose = require("mongoose")
+const User    = require("./models/User");
 const routes = require('./routes');
 const flash = require("connect-flash");
 const session = require("express-session");  
@@ -56,13 +57,33 @@ io.use(passportSocketIo.authorize({
 
 //Run when client connects
 io.on('connection', socket=>{
-  const {fullname} = socket.request.user
-  socket.broadcast.emit('message', {message:fullname})
-
+  const {fullname, _id, connected} = socket.request.user
+  User.findOne({_id})
+      .then(user=>{
+        user.connected = true; 
+        user.save()
+            .then(savedUser=>{
+              User.find({connected:true})
+                  .then(usersOnline=>io.emit("user-connected", usersOnline))
+                  .catch(err=>console.log(err))
+            })
+            .catch(err=>console.log(err))
+      })
+      .catch(err=>console.log(err))
   //Sends every user conneected a message about the user leaving the chat 
   socket.on("disconnect", ()=>{
-    const idTag = fullname.split(" ").join("-").toLowerCase();
-    io.emit("remove-user", idTag)
+    User.findOne({_id})
+      .then(user=>{
+        user.connected = false; 
+        user.save()
+            .then(savedUser=>{
+              User.find({connected:true})
+                  .then(usersOnline=>io.emit("user-disconnected", usersOnline))
+                  .catch(err=>console.log(err))
+            })
+            .catch(err=>console.log(err))
+      })
+      .catch(err=>console.log(err))
   })
   socket.on("message", message=>{
     io.emit("message", {message, user:socket.request.user});

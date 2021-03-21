@@ -13,10 +13,10 @@ html
     h1 FTTA Chat
     div(id="chat-box")
      ul(id="users-view")
-      li Users Online:
-     ul(id="messages-view")
+      p Users Online:
+     div(id="messages-view")
     form(action="/home", method="post", id="chat-form")
-     input(type="text", name="message", id="message-input", required)
+     input(type="text", name="message", id="message-input")
      input(type="submit", value="Send Message" class="btn btn-primary", id="message-submit")  
    <script src="/socket.io/socket.io.js"></script>
    script(async, defer, src='/public/client.js')
