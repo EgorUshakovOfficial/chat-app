@@ -1,19 +1,19 @@
-const socket = io();
-// let messages = []; 
+const socket = io("/home");
+ 
 socket.on('message', data=>{
 	const {message, user} = data;
 	output(message, user); 
 })
 
 
-socket.on('user-connected', usersOnline=>{
+socket.on('connected', usersOnline=>{
 	$("li").remove();
 	usersOnline.map(user=>{
 		$("#users-view").append($('<li>').html(`<b>${user.fullname}</b>`));
 	})
 })
 
-socket.on('user-disconnected', usersOnline=>{
+socket.on('disconnected', usersOnline=>{
 	$("li").remove();
 	usersOnline.map(user=>{
 		$("#users-view").append($('<li>').html(`<b>${user.fullname}</b>`));

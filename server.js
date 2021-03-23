@@ -12,7 +12,8 @@ const passportSocketIo = require("passport.socketio");
 const cookieParser = require("cookie-parser");
 const MongoStore = require('connect-mongo');
 const io = require("socket.io")(http);
-const sessionStore = MongoStore.create({ mongoUrl: process.env.MONGO_URI}) 
+const sessionStore = MongoStore.create({ mongoUrl: process.env.MONGO_URI})  // Session Store 
+const nsp = io.of('/home');  // Namespace 
 
 app.set("view engine", "pug");
 app.use('/public', express.static(__dirname + "/public")); 
@@ -45,8 +46,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Passport.socketIo middleware 
-io.use(passportSocketIo.authorize({
+//Using passportSocketIo, we have access to user object 
+nsp.use(passportSocketIo.authorize({
     cookieParser: cookieParser,
     key: 'express.sid',
     secret: process.env.SESSION_SECRET,
@@ -56,7 +57,7 @@ io.use(passportSocketIo.authorize({
 }))
 
 //Run when client connects
-io.on('connection', socket=>{
+nsp.on('connection', socket=>{
   const {fullname, _id, connected} = socket.request.user
   User.findOne({_id})
       .then(user=>{
@@ -64,7 +65,7 @@ io.on('connection', socket=>{
         user.save()
             .then(savedUser=>{
               User.find({connected:true})
-                  .then(usersOnline=>io.emit("user-connected", usersOnline))
+                  .then(usersOnline=>nsp.emit("connected", usersOnline))
                   .catch(err=>console.log(err))
             })
             .catch(err=>console.log(err))
@@ -78,7 +79,7 @@ io.on('connection', socket=>{
         user.save()
             .then(savedUser=>{
               User.find({connected:true})
-                  .then(usersOnline=>io.emit("user-disconnected", usersOnline))
+                  .then(usersOnline=>nsp.emit("disconnected", usersOnline))
                   .catch(err=>console.log(err))
             })
             .catch(err=>console.log(err))
@@ -86,7 +87,7 @@ io.on('connection', socket=>{
       .catch(err=>console.log(err))
   })
   socket.on("message", message=>{
-    io.emit("message", {message, user:socket.request.user});
+    nsp.emit("message", {message, user:socket.request.user});
   })
 
 })
