@@ -5,8 +5,6 @@ socket.on('message', data=>{
 	output(message, user); 
 })
 
-socket.on('remove-user', data=>{
-})
 
 socket.on('user-connected', usersOnline=>{
 	$("li").remove();
@@ -33,5 +31,5 @@ $("#chat-form").submit(()=>{
 let output = (...args)=>{
 	var messageToSend = args[0];
 	const {fullname} = args[1]; 
-	$("#messages-view").append($('<div>').html(`<b>${fullname}: ${messageToSend}</b>`));
+	$("#messages-view").append($('<div class="message">').html(`<b>${fullname} at ${new Date().toTimeString().substring(0, 5)}: ${messageToSend}</b>`));
 }

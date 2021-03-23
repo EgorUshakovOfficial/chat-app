@@ -10,7 +10,9 @@ html
    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
   body
    div(id="chat-container")
-    h1 FTTA Chat
+    div(id="profile")
+     p(id="username") #{user.fullname}
+     <a href="/logout" id="logout">Logout</a>
     div(id="chat-box")
      ul(id="users-view")
       p Users Online:

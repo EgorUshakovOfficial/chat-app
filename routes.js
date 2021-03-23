@@ -37,14 +37,13 @@ module.exports = function(app){
 
 	//Logout Route 
 	app.route('/logout').get((req, res)=>{
-		req.logOut(); 
+		req.logout(); 
 		res.redirect('/')
 	})
 
 	//Home Route 
-	app.route('/home').get(ensureAuthenticated, (req, res)=>{
-		const {fullname} = req.user; 
-		res.render('home', {fullname})
+	app.route('/home').get(ensureAuthenticated, (req, res)=>{ 
+		res.render('home', {user: req.user})
 	}); 
 
 	//Login Route 
