@@ -24,6 +24,7 @@ socket.on('disconnected', usersOnline=>{
 $("#chat-form").submit(()=>{
 	var messageToSend = $("#message-input").val(); 
 	$("#message-input").val("");
+	console.log(socket);
 	socket.emit("message", messageToSend); 
 	return false; //Prevents the page from rerendering 
 })

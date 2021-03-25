@@ -41,15 +41,20 @@ module.exports = function(app){
 		res.redirect('/')
 	})
 
-	//Home Route 
-	app.route('/home').get(ensureAuthenticated, (req, res)=>{ 
-		res.render('home', {user: req.user})
-	}); 
+	//Profile Route
+	app.route('/profile').get(ensureAuthenticated, (req, res)=>{ 
+		res.render('profile', {user: req.user})
+	});
+
+	//Messenger Route
+	app.route('/chat').get(ensureAuthenticated, (req, res)=>{
+		res.render('chat', {user: req.user});
+	})
 
 	//Login Route 
 	app.route('/login').post((req, res, next)=>{
 		passport.authenticate('local', {
-			successRedirect: '/home', 
+			successRedirect: '/profile', 
 			failureRedirect: '/', 
 			failureFlash: true
 		})(req, res, next); 

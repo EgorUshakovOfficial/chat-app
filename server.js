@@ -73,6 +73,7 @@ nsp.on('connection', socket=>{
       .catch(err=>console.log(err))
   //Sends every user conneected a message about the user leaving the chat 
   socket.on("disconnect", ()=>{
+    const {_id} = socket.request.user;
     User.findOne({_id})
       .then(user=>{
         user.connected = false; 
