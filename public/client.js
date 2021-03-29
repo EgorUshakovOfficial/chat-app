@@ -1,4 +1,5 @@
-const socket = io("/home");
+ //Socket.Io
+const socket = io("/chat");
  
 socket.on('message', data=>{
 	const {message, user} = data;
@@ -20,7 +21,6 @@ socket.on('disconnected', usersOnline=>{
 	})
 })
 
-
 $("#chat-form").submit(()=>{
 	var messageToSend = $("#message-input").val(); 
 	$("#message-input").val("");
@@ -29,6 +29,28 @@ $("#chat-form").submit(()=>{
 	return false; //Prevents the page from rerendering 
 })
 
+//Clickable Events
+$("#profile-pic").click(()=>{
+	$("#upload-form").css("opacity", "100%");
+	$("#pic-submit").attr("disabled", false);
+})
+$("#add-bio").click(()=>{
+	$("#bio-form").css("opacity", "100%");
+	$("#bio-submit").attr("disabled", false)
+	$("#cancel").attr("disabled", false)
+})
+
+$("#cancel").click(()=>{
+	$("#bio-form").css("opacity", "0%");
+	$("#bio-submit").attr("disabled", true);
+	$("#cancel").attr("disabled", true);
+})
+
+$("#chat-pic").click(()=>{
+	window.location.href = '/profile';
+})
+
+//Functions 
 let output = (...args)=>{
 	var messageToSend = args[0];
 	const {fullname} = args[1]; 

@@ -11,10 +11,25 @@ html
   body
    div(class="topnav")
     a(href="#profile-link") #{user.username}
-    a(href="#") Notifications
     a(href="/chat") Messenger
+    a(href="/logout") Logout
     input(type="text" placeholder="Search")
   div(class="container")
-   <a href="#" id="profile-link"><img src="https://scontent.fyxd1-1.fna.fbcdn.net/v/t1.0-9/115821478_3118181974896443_7757001406663804394_n.jpg?_nc_cat=102&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=JrSZg-rtTTIAX-UEPMo&_nc_ht=scontent.fyxd1-1.fna&oh=fb68152b0f420b558c01d45007954600&oe=60807BC1" alt="Profile picture" id="profile-pic"/></a>
+   - var url = user.picture
+   img(src=url alt="Profile picture" id="profile-pic")
+   form(action="/upload" method="post" enctype="multipart/form-data" id="upload-form")
+    div(class="custom-file mb-3")
+     input(type="file" name="file" id="file" class="custom-file-input")
+     label(for="file" class="custom-file-label") Choose Photo
+    input(type="submit" value="Submit" class="btn btn-primary btn-block" id="pic-submit" disabled)
    h1(id="username") #{user.fullname}
+   if user.bio != ''
+    p #{user.bio}
    a(id="add-bio" href="#") Add Biography
+   form(method="post" id="bio-form")
+    textarea(type="text" name="bio" cols="30" rows="10" id="bio-input")
+    input(type="submit" value="Save" class="btn btn-primary" id="bio-submit" disabled)
+    button(type="button" id="cancel" class="btn" disabled) Cancel
+   <script src="/socket.io/socket.io.js"></script>
+   script(src='/public/client.js')
+

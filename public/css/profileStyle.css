@@ -28,32 +28,58 @@
 }
 
 .container{
-	height: 80%;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-}
-
-
-#profile-link{
-	width: 50%;
-}
-
-#profile-link img:hover{
-	opacity: 0.7;
+	margin-top: 10%;
 }
 
 
 #profile-pic{
-	width: 100%;
+	width: 30%;
 	border-radius: 50%;
+}
+
+#profile-pic:hover{
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+#upload-form{
+	opacity: 0;
 }
 
 #username{
 	margin: 2%;
 }
 
+#bio-form{
+	opacity: 0;
+	height: 50%;
+}
+
+#bio-input{
+	width: 100%;
+	height: 50%;
+}
+
+#cancel{
+	width: 20%;
+	float: right;
+	background: lightgrey;
+	font-weight: 500;
+}
+
+#cancel:hover{
+	opacity: 70%;
+}
+
+#bio-submit{
+	width: 20%;
+	float:right;
+}
 
 @media screen and (max-width: 650px){
 	.topnav a, .topnav input[type=text]{

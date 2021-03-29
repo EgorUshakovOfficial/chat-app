@@ -1,8 +1,5 @@
 const mongoose = require("mongoose"); 
 
-//Connect to Mongodb Atlas 
-mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
-
 //User Schema 
 const Schema = mongoose.Schema; 
 const userSchema = new Schema({
@@ -12,7 +9,9 @@ const userSchema = new Schema({
 	password:{type:String, required:true}, 
 	token:String, 
 	tokenExpires:Date, 
-	connected:Boolean
+	connected:Boolean,
+	picture:String,
+	bio:String
 })
 
 //User model

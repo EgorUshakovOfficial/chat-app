@@ -6,6 +6,7 @@ const {ensureAuthenticated} = require('./authentication/ensuredauth');
 const {isPasswordCorrect, isEmailTaken, isUsernameTaken} = require("./authentication/registration");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer"); 
+
 module.exports = function(app){
 	app.route('/').get((req, res)=>{
  		res.render('index')
@@ -19,7 +20,12 @@ module.exports = function(app){
 	app.route('/register').post(isPasswordCorrect, isEmailTaken, isUsernameTaken, 
 		(req, res)=>{
 		const {email, fullname, username, password} = req.body; 
-		const newUser = new User({email, fullname, username, password, connected:false});  
+		const newUser = new User({
+			email, fullname, username, 
+			password, connected:false, token:"", 
+			tokenExpires: Date.now(), picture:"https://i.stack.imgur.com/l60Hf.png", 
+			bio:""
+			});  
 		const saltRounds = 10; 
 		// Hash password and save new use in the database 
 		bcrypt.genSalt(saltRounds, (err, salt)=>{
@@ -45,6 +51,21 @@ module.exports = function(app){
 	app.route('/profile').get(ensureAuthenticated, (req, res)=>{ 
 		res.render('profile', {user: req.user})
 	});
+
+	app.route('/profile').post(ensureAuthenticated, (req, res)=>{
+		const {bio} = req.body; 
+		const {_id} = req.user; 
+		User.findById(_id)
+			.then(user=>{
+				user.bio = bio; 
+				user.save()
+					.then(savedUser=>{
+						res.redirect("back")
+					})
+					.catch(err=>console.log(err))
+			})
+			.catch(err=>console.log(err));
+	})
 
 	//Messenger Route
 	app.route('/chat').get(ensureAuthenticated, (req, res)=>{

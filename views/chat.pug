@@ -6,12 +6,13 @@ html
    meta(charset='utf-8')
    meta(http-equiv='X-UA-Compatible', content='IE=edge')
    meta(name='viewport', content='width=device-width, initial-scale=1')
-   link(rel='stylesheet', href='/public/style.css')
+   link(rel='stylesheet', href='/public/css/MessagesStyle.css')
    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css")
   body
    div(id="chat-container")
     div(id="profile")
-     p(id="username") #{user.fullname}
+     -var url = user.picture
+     img(src=url alt="Profile photo" id="chat-pic")
      <a href="/logout" id="logout">Logout</a>
     div(id="chat-box")
      ul(id="users-view")
@@ -21,4 +22,4 @@ html
      input(type="text", name="message", id="message-input")
      input(type="submit", value="Send Message" class="btn btn-primary", id="message-submit")  
    <script src="/socket.io/socket.io.js"></script>
-   script(async, defer, src='/public/client.js')
+   script(src='/public/client.js')
